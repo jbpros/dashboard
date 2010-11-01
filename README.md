@@ -9,6 +9,21 @@ project's activity.
 
 This is still in a very very very early pre-alpha development.
 
+## Prerequesites
+
+You need the following installed:
+
+- [Node.js](http://nodejs.org/ "Node.js official website")
+- [NPM](http://github.com/isaacs/npm "Node Package Manager")
+
+## Installation
+
+    $ git clone git@github.com:jbpros/dashboard.git
+    $ npm install express jade less
+    $ cd dashboard
+    $ git submodule init
+    $ git submodule update
+    
 ## License
 
 This software is subject to the MIT license.
