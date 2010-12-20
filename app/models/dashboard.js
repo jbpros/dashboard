@@ -54,7 +54,7 @@ Dashboard.prototype = {
         fs.stat('widgets/'+files[i], function (err, stats) {
           if (err) throw err;
           if (stats.isDirectory()){
-            self.widgets.push(files[i]);
+            self.widgets.push(new Widget('widgets/'+files[i]));
           }
         });
       }
