@@ -3,8 +3,8 @@
  */
 
 var express = require('express');
-var app = module.exports = express.createServer();
-require.paths.unshift('./domain');
+var app = express.createServer();
+require.paths.unshift('./app/models');
 
 // Configuration
 app.configure(function(){
@@ -40,42 +40,8 @@ if (!module.parent) {
   console.log("Express server listening on port %d", app.address().port)
 }
 
-//////////////////////// DDD-experimenting //////////////////////////
-
-var DashboardFactory = require('factories/dashboard_factory');
-var Widget           = require('entities/widget');
-
-var dashboard = DashboardFactory.build("Hey guys!");
-// console.log(dashboard);
-// var pp = function(didSomething) { console.log(didSomething ? "Added!" : "Skipped") };
-// var px = function(didSomething) { console.log(didSomething ? "Removed!" : "Skipped") };
-// var wi = new WidgetInstance();
-// console.log(
-//   dashboard.
-//     addWidgetInstance(new WidgetInstance()).
-//     addWidgetInstance(new WidgetInstance()).
-//     addWidgetInstance(new WidgetInstance()).
-//     addWidgetInstance(wi, pp).
-//     addWidgetInstance(wi, pp).
-//     addWidgetInstance(wi, pp).
-//     addWidgetInstance(wi, pp).
-//     removeWidgetInstance(wi, px).
-//     removeWidgetInstance(wi, px).
-//     widgetInstances
-// );
-
-var widget = new Widget();
-var widgetInstances = [];
-var cacheResultingInstance = function(widgetInstance) {
-  widgetInstances.push(widgetInstance);
-};
-dashboard.activateWidget(widget, cacheResultingInstance).
-  activateWidget(widget, cacheResultingInstance).
-  activateWidget(widget, cacheResultingInstance).
-  activateWidget(widget, cacheResultingInstance).
-  activateWidget(widget, cacheResultingInstance);
-console.log(widgetInstances);
-
-//ActivateWidgetInstanceService(widget, dashboard);
-
-//WidgetInstanceFactory.build(widget, dashboard);
+var Dashboard	= require('dashboard');
+var Widget    = require('widget');
+              
+var dashboard = new Dashboard();
+dashboard.init();
