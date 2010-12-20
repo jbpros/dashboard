@@ -19,11 +19,15 @@ You need the following installed:
 ## Installation
 
     $ git clone git@github.com:jbpros/dashboard.git
-    $ npm install express jade less
+    $ npm install express jade less expresso
     $ cd dashboard
     $ git submodule init
     $ git submodule update
-    
+
+## Tests
+
+    $ expresso
+
 ## License
 
 This software is subject to the MIT license.
