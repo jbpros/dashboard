@@ -2,64 +2,71 @@ var WidgetInstance = require('widget_instance');
 var Widget         = require('widget');
 var fs             = require('fs');
 
-var Dashboard = function(title) {
+var Dashboard = function(widgetsPath, title) {
   if (!(this instanceof arguments.callee)) {
     return new arguments.callee(arguments);
   }
   var self = this;
 
+  if (typeof(widgetsPath) === 'undefined') {
+    throw "Widgets path required!";
+  }
+  self.widgetsPath = widgetsPath;
+  
   self.properties = {
-    title:           title,
+    title:           title || "My Project",
     widgetInstances: [],
     widgets:         []
   };
+
+  self.init();
+  //if (typeof(callback) !== 'undefined') { callback(); }
 };
 
 Dashboard.prototype = {
   get title()                          { return this.properties["title"]; },
   set title(title)                     { this.properties["title"] = title; },
 
-  get widgetInstances()                { return this.properties["widgetInstances"]; },
-  set widgetInstances(widgetInstances) { this.properties["widgetInstances"] = widgetInstances; },
-  
   get widgets()                        { return this.properties["widgets"]; },
-  set widgets(widgets)                 { this.properties["widgets"] = widgets; },
 
-  //activateWidget: function(widgetId, callback) {
-  //  var self = this;
-  //  var widgetInstance = new WidgetInstance(widgetId);
-  //  self.properties["widgetInstances"].push(widgetInstance);
-  //  callback && callback(widgetInstance);
-  //  return self;
-  //},
-  //
-  //removeWidgetInstance: function(widgetInstance, callback) {
-  //  var self = this;
-  //  var index = self.properties["widgetInstances"].indexOf(widgetInstance);
-  //  if (index != -1) {
-  //    self.properties["widgetInstances"].splice(index, 1);
-  //    callback && callback(true);
-  //  } else {
-  //    callback && callback(false);
-  //  }
-  //  return self;
-  //},
-  
-  init: function() {
-    var self = this;
-    
-    fs.readdir('widgets', function (err, files){
-      if (err) throw err;
-      for (i in files){
-        fs.stat('widgets/'+files[i], function (err, stats) {
-          if (err) throw err;
-          if (stats.isDirectory()){
-            self.widgets.push(new Widget('widgets/'+files[i]));
-          }
-        });
-      }
-    });
-  }
+  get widgetInstances()                { return this.properties["widgetInstances"]; },
+  // set widgetInstances(widgetInstances) { this.properties["widgetInstances"] = widgetInstances; },
 };
+
+/** @protected */
+Dashboard.prototype.init = function() {
+  var self = this;
+  self.loadWidgets();
+}
+
+/** @protected */
+Dashboard.prototype.loadWidgets = function() {
+  var self = this;
+  self.properties["widgets"] = [];
+  fs.readdir(self.pathToWidgets(true), function (err, files){
+    if (err) throw err;
+    for (i in files) {
+      self.loadWidget(self.pathToWidgets()+files[i]);
+    }
+  });
+}
+
+/** @protected */
+Dashboard.prototype.loadWidget = function(widgetPath) {
+  var self = this;
+  fs.stat(widgetPath, function (err, stats) {
+    if (err) throw err;
+    if (stats.isDirectory()){
+      widget = new Widget(widgetPath);
+      self.widgets.push(widget);
+    }
+  });
+}
+
+/** @protected */
+Dashboard.prototype.pathToWidgets = function(noTrailingSlash) {
+  var self = this;
+  return noTrailingSlash ? self.widgetsPath : self.widgetsPath+'/';
+}
 
 module.exports = Dashboard;

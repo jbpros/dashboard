@@ -13,12 +13,11 @@ var Widget = function(path) {
 }
 
 Widget.prototype = {
-  
   get path() { return this.properties["path"]; },
   
   init: function(){
     var self = this;
-    var widget = require('../../'+self.path+'/widget.js');
+    //var widget = require('../../'+self.path+'/widget.js');
   }
 };
 

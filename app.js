@@ -17,10 +17,17 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
+  app.set('widgetsPath', './widgets');
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+});
+
+app.configure('test', function(){
+  app.set('widgetsPath', './test/assets/widgets');
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
 app.configure('production', function(){
+  app.set('widgetsPath', './widgets');
   app.use(express.errorHandler()); 
 });
 
@@ -40,8 +47,8 @@ if (!module.parent) {
   console.log("Express server listening on port %d", app.address().port)
 }
 
-var Dashboard	= require('dashboard');
+var Dashboard = require('dashboard');
 var Widget    = require('widget');
-              
-var dashboard = new Dashboard();
-dashboard.init();
+var dashboard = new Dashboard(app.set('widgetsPath'));
+
+module.exports = app;
