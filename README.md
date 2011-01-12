@@ -26,7 +26,7 @@ You need the following installed:
 
 ## Tests
 
-    $ expresso
+    $ node specs.js
 
 ## License
 
