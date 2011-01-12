@@ -1,10 +1,6 @@
-/**
- * Module dependencies.
- */
-
+require.paths.unshift('./app/models');
 var express = require('express');
 var app = express.createServer();
-require.paths.unshift('./app/models');
 
 // Configuration
 app.configure(function(){
@@ -22,7 +18,7 @@ app.configure('development', function(){
 });
 
 app.configure('test', function(){
-  app.set('widgetsPath', './test/assets/widgets');
+  app.set('widgetsPath', './widgets');
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
@@ -41,7 +37,6 @@ app.get('/', function(req, res){
 });
 
 // Only listen on $ node app.js
-
 if (!module.parent) {
   app.listen(3000);
   console.log("Express server listening on port %d", app.address().port)
