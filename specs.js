@@ -1,8 +1,7 @@
 var jasmine = require('jasmine-node');
 var sys = require('sys');
 
-/* what's that for?:
-for(var key in jasmine) {
+/* for(var key in jasmine) {
   global[key] = jasmine[key];
 }*/
 

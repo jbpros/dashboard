@@ -1,6 +1,8 @@
+require.paths.unshift('./lib');
 require.paths.unshift('./app/models');
-var express = require('express');
-var app = express.createServer();
+var express     = require('express');
+var app         = express.createServer();
+var spec_helper = require('./spec/support/spec_helper');
 
 // Configuration
 app.configure(function(){
@@ -18,7 +20,7 @@ app.configure('development', function(){
 });
 
 app.configure('test', function(){
-  app.set('widgetsPath', './widgets');
+  app.set('widgetsPath', './test/assets/widgets');
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
@@ -41,9 +43,5 @@ if (!module.parent) {
   app.listen(3000);
   console.log("Express server listening on port %d", app.address().port)
 }
-
-var Dashboard = require('dashboard');
-var Widget    = require('widget');
-var dashboard = new Dashboard(app.set('widgetsPath'));
 
 module.exports = app;

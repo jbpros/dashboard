@@ -1,3 +1,4 @@
+var x              = require('x');
 var WidgetInstance = require('widget_instance');
 var Widget         = require('widget');
 var fs             = require('fs');
@@ -43,24 +44,13 @@ Dashboard.prototype.init = function() {
 Dashboard.prototype.loadWidgets = function() {
   var self = this;
   self.properties["widgets"] = [];
-  fs.readdir(self.pathToWidgets(true), function (err, files){
-    if (err) throw err;
-    for (i in files) {
-      self.loadWidget(self.pathToWidgets()+files[i]);
+  var files = fs.readdirSync(self.pathToWidgets(true));
+  for (var i in files) {
+    if (fs.statSync(self.pathToWidgets()+files[i]).isDirectory()) {
+      var widgetImplementation = x.require(self.pathToWidgets()+files[i]);
+      self.properties["widgets"].push(widgetImplementation);
     }
-  });
-}
-
-/** @protected */
-Dashboard.prototype.loadWidget = function(widgetPath) {
-  var self = this;
-  fs.stat(widgetPath, function (err, stats) {
-    if (err) throw err;
-    if (stats.isDirectory()){
-      widget = new Widget(widgetPath);
-      self.widgets.push(widget);
-    }
-  });
+  }
 }
 
 /** @protected */
