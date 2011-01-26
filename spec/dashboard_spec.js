@@ -6,8 +6,9 @@ var Dashboard = require('dashboard');
 describe('Dashboard', function() {
 
   beforeEach(function() {
-    this.widgetsPath = "/path/to/widgets";
-    this.spyOnReaddirSync = spyOn(fs, 'readdirSync');
+    this.widgetsPath       = "/path/to/widgets";
+    this.spyOnRealpathSync = spyOn(fs, 'realpathSync').andReturn(this.widgetsPath);
+    this.spyOnReaddirSync  = spyOn(fs, 'readdirSync');
   });
 
   it('has a title', function() {
@@ -32,7 +33,7 @@ describe('Dashboard', function() {
       jasmine.createSpyWithStubs('file1Stat', {isDirectory: false}),
       jasmine.createSpyWithStubs('dir2Stat', {isDirectory: true})
     ];
-    var widgetImplementations = [
+    var widgets = [
       jasmine.createSpyWithStubs('widget1', {version: "1.0"}),
       jasmine.createSpyWithStubs('widget2', {version: "0.9"})
     ];
@@ -40,7 +41,7 @@ describe('Dashboard', function() {
     // spies & stubs:
     this.spyOnReaddirSync.andReturn(files);
     spyOn(fs, 'statSync').andReturnSeveral(fileStats);
-    spyOn(x, 'require').andReturnSeveral(widgetImplementations);
+    spyOn(x, 'require').andReturnSeveral(widgets);
 
     var dashboard = new Dashboard(this.widgetsPath);
 
@@ -50,12 +51,12 @@ describe('Dashboard', function() {
       expect(fs.statSync).toHaveBeenCalledWith(this.widgetsPath+'/'+files[i]);
       expect(fileStats[i].isDirectory).toHaveBeenCalled();
     }
-    expect(x.require).toHaveBeenCalledWith(this.widgetsPath+'/'+files[0]);
-    expect(x.require).toHaveBeenCalledWith(this.widgetsPath+'/'+files[2]);
-    expect(x.require).not.toHaveBeenCalledWith(this.widgetsPath+'/'+files[1]);
+    expect(x.require).toHaveBeenCalledWith(this.widgetsPath+'/'+files[0]+'/widget');
+    expect(x.require).toHaveBeenCalledWith(this.widgetsPath+'/'+files[2]+'/widget');
+    expect(x.require).not.toHaveBeenCalledWith(this.widgetsPath+'/'+files[1]+'/widget');
     expect(dashboard.widgets).toBeDefined();
     expect(dashboard.widgets.length).toBe(2);
-    expect(dashboard.widgets).toEqual(widgetImplementations);
+    expect(dashboard.widgets).toEqual(widgets);
   });
 
   it('has widget instances', function() {

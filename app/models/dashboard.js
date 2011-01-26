@@ -21,7 +21,6 @@ var Dashboard = function(widgetsPath, title) {
   };
 
   self.init();
-  //if (typeof(callback) !== 'undefined') { callback(); }
 };
 
 Dashboard.prototype = {
@@ -31,7 +30,6 @@ Dashboard.prototype = {
   get widgets()                        { return this.properties["widgets"]; },
 
   get widgetInstances()                { return this.properties["widgetInstances"]; },
-  // set widgetInstances(widgetInstances) { this.properties["widgetInstances"] = widgetInstances; },
 };
 
 /** @protected */
@@ -44,19 +42,22 @@ Dashboard.prototype.init = function() {
 Dashboard.prototype.loadWidgets = function() {
   var self = this;
   self.properties["widgets"] = [];
-  var files = fs.readdirSync(self.pathToWidgets(true));
+  var files = fs.readdirSync(self.pathToWidgets());
   for (var i in files) {
-    if (fs.statSync(self.pathToWidgets()+files[i]).isDirectory()) {
-      var widgetImplementation = x.require(self.pathToWidgets()+files[i]);
+    if (fs.statSync(self.pathToWidgets(true)+files[i]).isDirectory()) {
+      var widgetImplementation = x.require(self.pathToWidgets(true)+files[i]+'/widget');
       self.properties["widgets"].push(widgetImplementation);
     }
   }
 }
 
 /** @protected */
-Dashboard.prototype.pathToWidgets = function(noTrailingSlash) {
+Dashboard.prototype.pathToWidgets = function(trailingSlash) {
   var self = this;
-  return noTrailingSlash ? self.widgetsPath : self.widgetsPath+'/';
+  var widgetsPath = fs.realpathSync(self.widgetsPath);
+  if (trailingSlash)
+    widgetsPath += '/';
+  return widgetsPath;
 }
 
 module.exports = Dashboard;
