@@ -2,7 +2,6 @@ require.paths.unshift('./lib');
 require.paths.unshift('./app/models');
 var express     = require('express');
 var app         = express.createServer();
-var spec_helper = require('./spec/support/spec_helper');
 
 // Configuration
 app.configure(function(){
