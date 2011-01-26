@@ -2,3 +2,4 @@
 public/stylesheets/*.css
 widgets/*
 .*.swp
+/data/*.db
