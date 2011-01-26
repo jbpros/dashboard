@@ -19,7 +19,7 @@ You need the following installed:
 ## Installation
 
     $ git clone git@github.com:jbpros/dashboard.git
-    $ npm install express jade less jasmine-node zombie
+    $ npm install express jade less jasmine-node zombie nstore
     $ cd dashboard
     $ git submodule init
     $ git submodule update
